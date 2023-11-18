@@ -1,0 +1,5 @@
+static/admin/
+**.pyc
+terocup/__init__.py
+**/__pycache__/
+terocup/migrations/
