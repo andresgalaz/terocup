@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-^39ffm=0874y*b7rud*^770^n^jlmr15=s_rglkn4zooi*9861
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['terocup.compustrom.com']
+ALLOWED_HOSTS = ['localhost', 'terocup.compustrom.com']
 CSRF_TRUSTED_ORIGINS = ['https://terocup.compustrom.com']
 
 
@@ -78,12 +78,16 @@ WSGI_APPLICATION = 'terocup.wsgi.application'
 
 DATABASES = {
     'default': {
-    	'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    	'NAME': 'django_db',
-    	'USER': 'agalaz',
-    	'PASSWORD': 'agalaz',
-    	'HOST': 'localhost',
-    	'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    'default_postgres': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'django_db',
+        'USER': 'agalaz',
+        'PASSWORD': 'agalaz',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 

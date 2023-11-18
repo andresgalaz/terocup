@@ -3,3 +3,4 @@ static/admin/
 terocup/__init__.py
 **/__pycache__/
 terocup/migrations/
+db.sqlite3
