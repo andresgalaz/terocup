@@ -6,6 +6,12 @@
 admin/ZFzf2023
 ```
 
+## Usuario Inicial
+
+```text
+nico_perez/cambiar_2023
+```
+
 ## Comandos
 
 ```bash
