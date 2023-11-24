@@ -26,7 +26,7 @@ class DescripcionAdmin(admin.ModelAdmin):
     search_fields = ('descripcion', )
 
     def get_ordering(self, request):
-        return [Lower('sexo')]
+        return [Lower('descripcion')]
 
 
 class SexoAdmin(admin.ModelAdmin):
