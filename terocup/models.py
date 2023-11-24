@@ -39,19 +39,19 @@ class Programa(models.Model):
 
 
 class Sexo(models.Model):
-    sexo = models.CharField(max_length=10, unique=True)
+    sexo = models.CharField(max_length=20, unique=True)
 
     def __str__(self):
         return self.sexo
 
 
 class Paciente(models.Model):
-    rut = models.CharField(max_length=10, unique=True)
+    rut = models.CharField(max_length=20, unique=True)
     cp = models.CharField(max_length=20)
     numero_ficha = models.CharField(max_length=120, null=True, blank=True)
     primer_apellido = models.CharField(max_length=30)
     segundo_apellido = models.CharField(max_length=30, null=True, blank=True)
-    nombre = models.CharField(max_length=30)
+    nombre = models.CharField(max_length=50)
     fecha_nacimiento = models.DateField(auto_now_add=False)
     prevision = models.ForeignKey(Prevision, models.SET_NULL, blank=True, null=True, related_name="paciente_prevision")
     sexo = models.ForeignKey(Sexo, on_delete=models.CASCADE, related_name="paciente_sexo")
