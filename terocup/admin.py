@@ -4,8 +4,8 @@ from django.contrib import admin
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from terocup.models import Paciente, Consultorio, Programa, Sexo, Diagnotico
-import terocup.rut as rut
+from terocup.models import Comuna, Diagnostico, ObsAdicional, Paciente, Pais, Prevision, Programa, Sexo
+import terocup.util_rut as util_rut
 
 from django.conf.locale.es import formats as es_formats
 
@@ -19,13 +19,22 @@ class PacienteForm(forms.ModelForm):
 
     def clean_rut(self):
         cRut = self.cleaned_data['rut']
-        if not rut.valida(cRut):
+        if not util_rut.valida(cRut):
             raise forms.ValidationError('Rut no válido')
         return None if cRut is None else cRut.upper()
 
 
+class ObsAdicionalInline(admin.TabularInline):
+    model = ObsAdicional
+
+
 class PacienteAdmin(admin.ModelAdmin):
     form = PacienteForm
+    list_display = ('rut', 'primer_apellido', 'segundo_apellido', 'nombre')
+    search_fields = ('rut', 'primer_apellido', 'segundo_apellido', 'nombre')
+    list_filter = ('programa', 'comuna')
+    inlines = [ObsAdicionalInline,]
+
     readonly_fields = ('edad',)
 
     def edad(self, obj):
@@ -34,7 +43,9 @@ class PacienteAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Paciente, PacienteAdmin)
-admin.site.register(Consultorio)
-admin.site.register(Diagnotico)
+admin.site.register(Comuna)
+admin.site.register(Diagnostico)
+admin.site.register(Pais)
+admin.site.register(Prevision)
 admin.site.register(Programa)
 admin.site.register(Sexo)

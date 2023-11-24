@@ -46,7 +46,7 @@ def formato(cRut):
 
 
 def formatoCorto(cRut):
-    # Agrega separador de miles, guión y cero a la izquierda
+    # Sin separador de miles con guión
     cRut = limpia(cRut)
     dv = cRut[-1]
     # Elimina cero a la izquierda

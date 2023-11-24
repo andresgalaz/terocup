@@ -1,43 +1,83 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+import terocup.util_rut as util_rut
 
 
-class Consultorio(models.Model):
-    nombre = models.CharField(max_length=120)
+class Comuna(models.Model):
+    nombre = models.CharField(max_length=120, unique=True)
 
     def __str__(self):
         return self.nombre
 
 
-class Diagnotico(models.Model):
-    descripcion = models.CharField(max_length=120)
+class Diagnostico(models.Model):
+    descripcion = models.CharField(max_length=120, unique=True)
 
     def __str__(self):
         return self.descripcion
 
 
+class Pais(models.Model):
+    nombre = models.CharField(max_length=120, unique=True)
+
+    def __str__(self):
+        return self.nombre
+
+
+class Prevision(models.Model):
+    nombre = models.CharField(max_length=120, unique=True)
+
+    def __str__(self):
+        return self.nombre
+
+
 class Programa(models.Model):
-    nombre = models.CharField(max_length=120)
+    nombre = models.CharField(max_length=120, unique=True)
 
     def __str__(self):
         return self.nombre
 
 
 class Sexo(models.Model):
-    sexo = models.CharField(max_length=10)
+    sexo = models.CharField(max_length=10, unique=True)
 
     def __str__(self):
         return self.sexo
 
 
 class Paciente(models.Model):
-    nombre = models.CharField(max_length=120)
+    rut = models.CharField(max_length=10, unique=True)
+    cp = models.CharField(max_length=20)
+    numero_ficha = models.CharField(max_length=120, null=True, blank=True)
+    primer_apellido = models.CharField(max_length=30)
+    segundo_apellido = models.CharField(max_length=30, null=True, blank=True)
+    nombre = models.CharField(max_length=30)
+    fecha_nacimiento = models.DateField(auto_now_add=False)
+    prevision = models.ForeignKey(Prevision, models.SET_NULL, blank=True, null=True, related_name="paciente_prevision")
     sexo = models.ForeignKey(Sexo, on_delete=models.CASCADE, related_name="paciente_sexo")
-    rut = models.CharField(max_length=10, null=True, blank=True)
-    fechaNacimiento = models.DateField(auto_now_add=False, null=True, blank=True)
-    numeroFicha = models.CharField(max_length=20, null=True, blank=True)
+    nacionalidad = models.ForeignKey(Pais, on_delete=models.CASCADE, related_name="paciente_nacionalidad")
+    comuna = models.ForeignKey(Comuna, models.SET_NULL, blank=True, null=True, related_name="paciente_comuna")
     programa = models.ForeignKey(Programa, models.SET_NULL, blank=True, null=True, related_name="paciente_programa")
-    consultorio = models.ForeignKey(Consultorio, models.SET_NULL, blank=True, null=True, related_name="paciente_consultorio")
-    diagnotico = models.ForeignKey(Diagnotico, models.SET_NULL, blank=True, null=True, related_name="paciente_diagnotico")
+    diagnostico = models.ForeignKey(Diagnostico, models.SET_NULL, blank=True, null=True, related_name="paciente_diagnostico")
+    sename = models.BooleanField(default=False, null=True)
+    migrante = models.BooleanField(default=False, null=True)
+    pueblo_originario = models.BooleanField(default=False, null=True)
+    observacion = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.nombre
+        return self.nombre + ' ' + self.primer_apellido + ' ' + self.segundo_apellido
+
+    def clean(self):
+        if util_rut.valida(self.rut):
+            self.rut = util_rut.formatoCorto(self.rut)
+        else:
+            raise ValidationError("RUT no es válido")
+
+
+class ObsAdicional(models.Model):
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
+    fecha = models.DateField(null=True, blank=True)
+    texto = models.TextField()
+
+    def __str__(self):
+        return str(self.paciente.id)+'-'+str(self.id)
