@@ -2,9 +2,6 @@ from django import forms
 from django.contrib import admin
 from django.db.models.functions import Lower
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-
 from terocup.models import Comuna, Diagnostico, ObsAdicional, Paciente, Pais, Prevision, Programa, Sexo
 import terocup.util_rut as util_rut
 
@@ -59,12 +56,7 @@ class PacienteAdmin(admin.ModelAdmin):
     search_fields = ('rut', 'primer_apellido', 'segundo_apellido', 'nombre')
     list_filter = ('programa', 'comuna')
     inlines = [ObsAdicionalInline,]
-
     readonly_fields = ('edad',)
-
-    def edad(self, obj):
-        edad = relativedelta(datetime.now(), obj.fechaNacimiento)
-        return edad.years
 
 
 admin.site.register(Paciente, PacienteAdmin)

@@ -1,5 +1,8 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 import terocup.util_rut as util_rut
 
 
@@ -63,6 +66,12 @@ class Paciente(models.Model):
     migrante = models.BooleanField(default=False, null=True)
     pueblo_originario = models.BooleanField(default=False, null=True)
     observacion = models.TextField(blank=True, null=True)
+
+    @property
+    def edad(self):
+        "Retorna la edad del apciente."
+        edad = relativedelta(datetime.now(), self.fecha_nacimiento)
+        return edad.years
 
     def __str__(self):
         return self.nombre + ' ' + self.primer_apellido + ' ' + self.segundo_apellido
